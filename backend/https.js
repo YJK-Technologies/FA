@@ -50,7 +50,7 @@ app.post("/register", async (req, res) => {
     for (let i = 0; i < images.length; i++) {
       const img = images[i];
       try {
-        const response = await axios.post("http://localhost:5001/encode", { image: img });
+        const response = await axios.post("http://localhost:5055/encode", { image: img });
         if (response.data.encoding) {
           encodedFaces.push(response.data.encoding);
         } else {
@@ -92,7 +92,7 @@ app.post("/attendance", async (req, res) => {
   try {
     const { image, type } = req.body;
 
-    const response = await axios.post("http://localhost:5001/recognize", { image });
+    const response = await axios.post("http://localhost:5055/recognize", { image });
 
     if (response.data.error || !response.data.encoding) {
       return res.status(400).json({ message: response.data.error || "Face Not Recognized" });
@@ -113,7 +113,7 @@ app.post("/attendance", async (req, res) => {
       }
 
       for (let storedEncoding of storedEncodings) {
-        const matchResponse = await axios.post("http://localhost:5001/match", {
+        const matchResponse = await axios.post("http://localhost:5055/match", {
           storedEncoding,
           inputEncoding: response.data.encoding,
         });
