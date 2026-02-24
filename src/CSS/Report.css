@@ -1,0 +1,238 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap");
+
+.attendance-container {
+  border-radius: 10px;
+  color: white;
+  animation: fadeIn 1s ease-in-out;
+  font-family: "Poppins", sans-serif;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: white;
+  animation: fadeIn 1s ease-in-out;
+  text-shadow: 4px 4px 0px #1a1a1a, 
+              8px 8px 0px rgba(0, 0, 0, 0.3), 
+              12px 12px 0px rgba(0, 0, 0, 0.2);
+}
+
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  border-radius: 10px;
+  flex-wrap: wrap; /* Allows wrapping on smaller screens */
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+
+.input-group label {
+  font-weight: bold;
+  color: white;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.search-container input {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  background: #ffffff;
+  color: #000;
+  width: 150px;
+  outline: none;
+  transition: 0.3s ease-in-out;
+  font-family: "Poppins", sans-serif;
+}
+
+.button-container {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.icon-btn {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 12px;
+  cursor: pointer;
+  margin-top: 25px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  transition: 0.3s ease-in-out;
+}
+
+.icon-btn:hover {
+  background: #ffcc00;
+  transform: scale(1.1);
+}
+
+.table-container {
+  height: 400px;
+  width: 100%;
+  animation: slideUp 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ag-theme-alpine {
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.ag-header {
+  background: #0f3460 !important;
+  color: white !important;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 14px;
+  font-family: "Poppins", sans-serif;
+}
+
+.ag-header-cell-text {
+  color: white !important;
+}
+
+.ag-root-wrapper.ag-layout-normal {
+  border-radius: 10px;
+}
+
+.ag-row {
+  font-family: "Poppins", sans-serif;
+  color: black !important;
+  font-size: 13px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.ag-row:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  transform: scale(1.02);
+}
+
+.ag-cell {
+  border-right: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ag-row {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+/* ============ RESPONSIVE DESIGN ============ */
+
+/* Small Screens (Tablets & Mobiles) */
+@media (max-width: 1024px) {
+  .search-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .search-container input {
+    width: 100%;
+    max-width: 250px;
+  }
+
+  .icon-btn {
+    width: 100%;
+    max-width: 200px;
+    margin-top: 10px;
+  }
+
+  .title {
+    font-size: 24px;
+  }
+
+  .table-container {
+    height: 300px;
+  }
+
+  .ag-header {
+    font-size: 12px;
+  }
+
+  .ag-row {
+    font-size: 12px;
+  }
+}
+
+/* Extra Small Screens (Mobile Phones) */
+@media (max-width: 600px) {
+    .search-container {
+      align-items: center;
+    }
+  
+    .input-group {
+      width: 100%;
+    }
+  
+    .input-group label {
+      font-size: 12px;
+    }
+
+    .button-container {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        width: 100%;
+    }
+  
+    .icon-btn {
+      max-width: 50px;
+      font-size: 16px;
+    }
+  
+    .title {
+      font-size: 20px;
+    }
+
+    .ag-theme-alpine {
+      min-width: 300px; 
+    }
+  }

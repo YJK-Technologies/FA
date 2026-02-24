@@ -1,0 +1,145 @@
+/* Full Page Centered Container */
+.register-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+  /* background: #06142E; */
+  /* background: linear-gradient(135deg, #1e1e2f, #25253a); Match Sidebar Feel */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 1s ease-in-out;
+}
+
+/* Webcam Container */
+.webcam-container {
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 15px;
+  overflow: hidden;
+  width: 100%;
+  max-width: 350px;
+  margin-bottom: 20px;
+  backdrop-filter: blur(10px);
+  animation: slideIn 1s ease-in-out;
+}
+
+.webcam {
+  width: 100%;
+  height: auto;
+}
+
+/* Title */
+.register-title {
+  color: white;
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  animation: fadeIn 1.2s ease-in-out;
+  text-shadow: 4px 4px 0px #1a1a1a, 
+  8px 8px 0px rgba(0, 0, 0, 0.3), 
+  12px 12px 0px rgba(0, 0, 0, 0.2);
+}
+
+/* Input Fields - Glassmorphism */
+.input-field {
+  width: 100%;
+  font-family: "Poppins", sans-serif;
+  max-width: 300px;
+  padding: 12px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 25px;
+  outline: none;
+  font-size: 16px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease-in-out;
+}
+
+.input-field::placeholder {
+  font-family: "Poppins", sans-serif;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.input-field:focus {
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Register Button */
+.register-button {
+  width: 100%;
+  max-width: 120px;
+  padding: 10px;
+  background: linear-gradient(90deg, #ff416c, #ff4b2b);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  font-size: 16px;
+  margin-top: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+  transition: all 0.3s ease-in-out;
+  animation: glow 1.5s infinite alternate ease-in-out;
+}
+
+.register-button:hover {
+  transform: translateY(-3px);
+  background: linear-gradient(90deg, #ff4b2b, #ff416c);
+  box-shadow: 0 0 15px rgba(255, 0, 100, 0.8);
+}
+
+.register-button:active {
+  transform: translateY(2px);
+  background: linear-gradient(90deg, #ff1b58, #ff5733);
+}
+
+.message{
+  color: white;
+}
+
+/* Keyframe Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes glow {
+  from { box-shadow: 0 0 10px rgba(255, 0, 100, 0.5); }
+  to { box-shadow: 0 0 20px rgba(255, 0, 100, 1); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .register-container {
+    padding: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .register-container {
+    height: auto;
+    padding: 20px;
+  }
+
+  .register-title {
+    font-size: 22px;
+  }
+
+  .input-field, .register-button {
+    max-width: 280px;
+  }
+}
