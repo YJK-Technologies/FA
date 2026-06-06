@@ -19,7 +19,9 @@ const Attendance = () => {
   const blinkCounterRef = useRef(0);
 
   const [loading, setLoading] = useState(false);
-  const [blinkCount, setBlinkCount] = useState(0);
+  const attendanceLockRef = useRef(false);
+  const blinkTimeRef = useRef(0);
+  const doubleBlinkRef = useRef(0);
 
   const calculateEAR = (landmarks) => {
     const indices = [33, 160, 158, 133, 153, 144];
@@ -43,7 +45,13 @@ const Attendance = () => {
   };
 
   const onResults = (results) => {
-    if (!results || !results.multiFaceLandmarks || results.multiFaceLandmarks.length === 0) return;
+    if (
+      !results ||
+      !results.multiFaceLandmarks ||
+      results.multiFaceLandmarks.length === 0
+    ) {
+      return;
+    }
 
     const landmarks = results.multiFaceLandmarks[0];
     const ear = calculateEAR(landmarks);
@@ -53,24 +61,41 @@ const Attendance = () => {
     if (ear < EAR_THRESHOLD) {
       blinkCounterRef.current += 1;
     } else {
+
       if (blinkCounterRef.current >= BLINK_CONSEC_FRAMES) {
-        setBlinkCount((prev) => {
-          const newCount = prev + 1;
-          // toast.success(`Blink ${newCount} detected!`);
 
-          if (newCount === 1) {
-            captureAndMarkAttendance("checkin");
-          } else if (newCount === 2) {
-            captureAndMarkAttendance("checkout");
-          } else if (newCount > 2) {
-            blinkCounterRef.current = 0; // Reset blink counter after 2 successful detections
-            return 0;
-          }
+        const now = Date.now();
 
-          return newCount;
-        });
+        if (now - blinkTimeRef.current <= 2000) {
+
+          doubleBlinkRef.current += 1;
+
+        } else {
+
+          doubleBlinkRef.current = 1;
+
+        }
+
+        blinkTimeRef.current = now;
+
+        if (
+          doubleBlinkRef.current >= 2 &&
+          !attendanceLockRef.current
+        ) {
+
+          attendanceLockRef.current = true;
+
+          captureAndMarkAttendance();
+
+          setTimeout(() => {
+            attendanceLockRef.current = false;
+          }, 3000);
+
+          doubleBlinkRef.current = 0;
+        }
       }
-      blinkCounterRef.current = 0; // Reset if the ear threshold is above the blink detection threshold
+
+      blinkCounterRef.current = 0;
     }
   };
 
@@ -120,7 +145,7 @@ const Attendance = () => {
     };
   }, []);
 
-  const captureAndMarkAttendance = async (type) => {
+  const captureAndMarkAttendance = async () => {
     setLoading(true);
     try {
       const imageSrc = webcamRef.current.getScreenshot();
@@ -133,14 +158,16 @@ const Attendance = () => {
       const response = await fetch(`${config.apiBaseUrl}/attendance`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image: imageSrc, type }),
+        body: JSON.stringify({
+          image: imageSrc
+        }),
       });
 
       const data = await response.json();
       if (response.ok) {
-        toast.success(data.message || `Attendance ${type} successful!`);
+        toast.success(data.message);
       } else {
-        toast.error(data.message || `Attendance ${type} failed.`);
+        toast.error(data.message);
       }
     } catch (err) {
       console.error("Error:", err);
@@ -156,7 +183,7 @@ const Attendance = () => {
       <Toaster position="top-right" reverseOrder={false} />
       {loading && <LoadingScreen />}
       <h2 className="attendance-title">Employee Attendance</h2>
-      <h2 className="">(Blink to Check In/Out)</h2>
+      <h2>(Double Blink To Mark Attendance)</h2>
 
       <div className="webcam-container">
         <Webcam
