@@ -199,3 +199,4 @@ app.post("/searchAttendance", async (req, res) => {
 https.createServer(sslOptions, app).listen(HTTPS_PORT, () => {
   console.log(`✅ HTTPS server running on https://localhost:${HTTPS_PORT}`);
 });
+ 
