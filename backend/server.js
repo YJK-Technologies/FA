@@ -107,6 +107,8 @@ app.post("/attendance", async (req, res) => {
             mode = "OUT";
           }
 
+          console.log(mode)
+
           await pool.request()
             .input("Employee_ID", sql.VarChar, empID)
             .query(`EXEC sp_Face_Attendance_log '${mode}',@Employee_ID,'','','','','','','',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL`);
@@ -159,3 +161,4 @@ app.post("/searchAttendance", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
+  

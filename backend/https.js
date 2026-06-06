@@ -90,7 +90,7 @@ app.post("/register", async (req, res) => {
 // ========================
 app.post("/attendance", async (req, res) => {
   try {
-    const { image, type } = req.body;
+    const { image } = req.body;
 
     const response = await axios.post("http://localhost:5055/recognize", { image });
 
@@ -120,10 +120,34 @@ app.post("/attendance", async (req, res) => {
 
         if (matchResponse.data.match) {
           const empID = row.Employee_ID;
-          const query =
-            type === "checkin"
-              ? `EXEC [sp_Face_Attendance_log] 'IN',@Employee_ID,'','','','','','','',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL`
-              : `EXEC [sp_Face_Attendance_log] 'OUT',@Employee_ID,'','','','','','','',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL`;
+          const statusResult = await pool.request()
+          .input("Employee_ID", sql.VarChar, empID)
+          .query(`
+          SELECT TOP 1 *
+          FROM tbl_AttendanceLog
+          WHERE Employee_ID=@Employee_ID
+          ORDER BY check_in DESC
+          `);
+          
+          let mode = "IN";
+          
+          if (
+              statusResult.recordset.length > 0 &&
+              statusResult.recordset[0].check_out === null
+          ) {
+              mode = "OUT";
+          }
+
+          await pool.request()
+          .input("Employee_ID", sql.VarChar, empID)
+          .query(`EXEC sp_Face_Attendance_log '${mode}',@Employee_ID,'','','','','','','',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL`);
+          
+          return res.json({
+             message:
+                mode === "IN"
+                ? `Check-In Successful (${empID})`
+                : `Check-Out Successful (${empID})`
+          });
 
           await pool.request().input("Employee_ID", sql.VarChar, empID).query(query);
 
@@ -175,3 +199,4 @@ app.post("/searchAttendance", async (req, res) => {
 https.createServer(sslOptions, app).listen(HTTPS_PORT, () => {
   console.log(`✅ HTTPS server running on https://localhost:${HTTPS_PORT}`);
 });
+ 
