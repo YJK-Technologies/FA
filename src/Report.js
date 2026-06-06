@@ -13,8 +13,10 @@ const config = require("./ApiConfig");
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 const AttendanceLog = () => {
-    const [fromDate, setFromDate] = useState("");
-    const [toDate, setToDate] = useState("");
+    const today = new Date().toISOString().split("T")[0];
+
+    const [fromDate, setFromDate] = useState(today);
+    const [toDate, setToDate] = useState(today);
     const [loading, setLoading] = useState(false);
     const [Employee_ID, setEmployee_ID] = useState("");
     const [rowData, setRowData] = useState([]);

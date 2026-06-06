@@ -22,8 +22,8 @@ const Sidebar = () => {
       <div className={`sidebar ${isOpen ? "open" : ""}`}>
         <ul className={`sidebar-list ${isOpen ? "fade-in" : ""}`}>
           <li><Link to="/" onClick={toggleSidebar}>🏠 Home</Link></li>
-          <li><Link to="/attendance" onClick={toggleSidebar}>📅 Attendance</Link></li>
           <li><Link to="/register" onClick={toggleSidebar}>📝 Register</Link></li>
+          <li><Link to="/attendance" onClick={toggleSidebar}>📅 Attendance</Link></li>
           <li><Link to="/report" onClick={toggleSidebar}>👤 Report</Link></li>
         </ul>
 
