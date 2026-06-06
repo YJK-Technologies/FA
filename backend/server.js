@@ -107,6 +107,8 @@ app.post("/attendance", async (req, res) => {
             mode = "OUT";
           }
 
+          console.log(mode)
+
           await pool.request()
             .input("Employee_ID", sql.VarChar, empID)
             .query(`EXEC sp_Face_Attendance_log '${mode}',@Employee_ID,'','','','','','','',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL`);
