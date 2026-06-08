@@ -18,10 +18,19 @@ const Attendance = () => {
   const cameraRef = useRef(null);
   const blinkCounterRef = useRef(0);
 
+  const [location, setLocation] = useState("");
+  const [ipAddress, setIpAddress] = useState("");
+  const [deviceDetails, setDeviceDetails] = useState("");
+  const [locationType, setLocationType] = useState("");
+  const [locationEnabled, setLocationEnabled] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const attendanceLockRef = useRef(false);
   const blinkTimeRef = useRef(0);
   const doubleBlinkRef = useRef(0);
+
+  const OFFICE_LAT = 13.332959916581236;
+  const OFFICE_LNG = 80.19093215795775;
 
   const calculateEAR = (landmarks) => {
     const indices = [33, 160, 158, 133, 153, 144];
@@ -99,7 +108,70 @@ const Attendance = () => {
     }
   };
 
+  const calculateDistance = (
+    lat1,
+    lon1,
+    lat2,
+    lon2
+  ) => {
+
+    const R = 6371000;
+
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    return R * c;
+  };
+
+  const loadDeviceInformation = async () => {
+
+    try {
+      setDeviceDetails(navigator.userAgent);
+
+      const ipResponse = await fetch("https://api.ipify.org?format=json");
+      const ipData = await ipResponse.json();
+      setIpAddress(ipData.ip);
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+          setLocation(`${latitude},${longitude}`);
+          const distance =
+            calculateDistance(
+              OFFICE_LAT,
+              OFFICE_LNG,
+              latitude,
+              longitude
+            );
+
+          if (distance <= 100) {
+            setLocationType("Office");
+          } else if (distance <= 150) {
+            setLocationType("On the Way");
+          } else {
+            setLocationType("Home");
+          }
+          setLocationEnabled(true);
+        },
+
+        (error) => {
+          setLocationEnabled(false);
+          toast.error("Location access is required for attendance");
+        }
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
+    loadDeviceInformation();
+
     const faceMesh = new FaceMesh({
       locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`,
     });
@@ -146,6 +218,11 @@ const Attendance = () => {
   }, []);
 
   const captureAndMarkAttendance = async () => {
+    if (!locationEnabled) {
+      toast.warning("Please enable location to mark attendance");
+      return;
+    }
+
     setLoading(true);
     try {
       const imageSrc = webcamRef.current.getScreenshot();
@@ -159,7 +236,11 @@ const Attendance = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          image: imageSrc
+          image: imageSrc,
+          deviceDetails,
+          ipAddress,
+          location,
+          locationType
         }),
       });
 
