@@ -136,9 +136,7 @@ const Attendance = () => {
 
           let currentLocationType = "Home";
 
-          if (accuracy > 100) {
-            currentLocationType = "Location Not Accurate";
-          } else if (distance <= 500) {
+          if (distance <= 500) {
             currentLocationType = "Office";
           } else if (distance <= 600) {
             currentLocationType = "On the Way";
