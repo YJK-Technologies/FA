@@ -61,7 +61,7 @@ app.post("/register", async (req, res) => {
 // Face Recognition API
 app.post("/attendance", async (req, res) => {
   try {
-    const { image } = req.body;
+    const { image, deviceDetails, ipAddress, location, locationType } = req.body;
 
     const response = await axios.post("http://localhost:5055/recognize", { image });
 
@@ -111,7 +111,11 @@ app.post("/attendance", async (req, res) => {
 
           await pool.request()
             .input("Employee_ID", sql.VarChar, empID)
-            .query(`EXEC sp_Face_Attendance_log '${mode}',@Employee_ID,'','','','','','','',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL`);
+            .input("DeviceDetails", sql.VarChar, deviceDetails)
+            .input("IP_Address", sql.VarChar, ipAddress)
+            .input("Location", sql.VarChar, location)
+            .input("LocationType", sql.VarChar, locationType)
+            .query(`EXEC sp_Face_Attendance_log_test '${mode}',@Employee_ID,'','','','','','','',@DeviceDetails,@IP_Address,@Location,@LocationType,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL`);
 
           return res.json({
             message:
@@ -146,7 +150,7 @@ app.post("/searchAttendance", async (req, res) => {
       .input("Employee_ID", sql.VarChar, Employee_ID)
       .input("from_date", sql.VarChar, from_date)
       .input("to_date", sql.VarChar, to_date)
-      .query(`EXEC sp_Face_Attendance_log 'SC',@Employee_ID,'','','','','',@from_date,@to_date,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL`);
+      .query(`EXEC sp_Face_Attendance_log_test 'SC',@Employee_ID,'','','','','',@from_date,@to_date,'','','','',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL`);
     if (result.recordset.length > 0) {
       res.status(200).json(result.recordset); // 200 OK if data is found
     } else {
