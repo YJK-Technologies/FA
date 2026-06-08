@@ -107,7 +107,6 @@ app.post("/attendance", async (req, res) => {
             mode = "OUT";
           }
 
-          console.log(mode)
 
           await pool.request()
             .input("Employee_ID", sql.VarChar, empID)
