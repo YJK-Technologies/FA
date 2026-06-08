@@ -136,9 +136,9 @@ const Attendance = () => {
 
           let currentLocationType = "Home";
 
-          if (distance <= 500) {
+          if (distance <= 100) {
             currentLocationType = "Office";
-          } else if (distance <= 600) {
+          } else if (distance <= 150) {
             currentLocationType = "On the Way";
           } else {
             currentLocationType = "Home";
@@ -228,15 +228,9 @@ const Attendance = () => {
 
     }
     catch (err) {
-
       setLocationEnabled(false);
-
-      toast.error(
-        "Location access is required for attendance"
-      );
-
+      toast.error("Location access is required for attendance");
       console.error(err);
-
     }
   };
 
@@ -274,7 +268,6 @@ const Attendance = () => {
         cameraInstance.start();
         cameraRef.current = cameraInstance;
       } else {
-        // Retry until webcam is ready
         setTimeout(startCamera, 100);
       }
     };
