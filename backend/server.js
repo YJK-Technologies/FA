@@ -28,7 +28,7 @@ app.post("/register", async (req, res) => {
     for (let i = 0; i < images.length; i++) {
       const img = images[i];
       try {
-        const response = await axios.post("http://localhost:5001/encode", { image: img });
+        const response = await axios.post("http://localhost:5055/encode", { image: img });
         if (response.data.encoding) {
           encodedFaces.push(response.data.encoding);
         } else {
@@ -61,9 +61,9 @@ app.post("/register", async (req, res) => {
 // Face Recognition API
 app.post("/attendance", async (req, res) => {
   try {
-    const { image, type } = req.body;
+    const { image, deviceDetails, ipAddress, location, locationType } = req.body;
 
-    const response = await axios.post("http://localhost:5001/recognize", { image });
+    const response = await axios.post("http://localhost:5055/recognize", { image });
 
     if (response.data.error || !response.data.encoding) {
       return res.status(400).json({ message: response.data.error || "Face Not Recognized" });
@@ -82,16 +82,46 @@ app.post("/attendance", async (req, res) => {
       }
 
       for (let storedEncoding of storedEncodings) {
-        const matchResponse = await axios.post("http://localhost:5001/match", {
+        const matchResponse = await axios.post("http://localhost:5055/match", {
           storedEncoding,
           inputEncoding: response.data.encoding
         });
 
         if (matchResponse.data.match) {
           const empID = row.Employee_ID;
-          const query = type === "checkin"
-            ? `EXEC [sp_Face_Attendance_log] 'IN',@Employee_ID,'','','','','','','',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL`
-            : `EXEC [sp_Face_Attendance_log] 'OUT',@Employee_ID,'','','','','','','',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL`;
+          const statusResult = await pool.request()
+            .input("Employee_ID", sql.VarChar, empID)
+            .query(`
+              SELECT TOP 1 *
+              FROM tbl_AttendanceLog
+              WHERE Employee_ID=@Employee_ID
+              ORDER BY check_in DESC
+            `);
+
+          let mode = "IN";
+
+          if (
+            statusResult.recordset.length > 0 &&
+            statusResult.recordset[0].check_out === null
+          ) {
+            mode = "OUT";
+          }
+
+
+          await pool.request()
+            .input("Employee_ID", sql.VarChar, empID)
+            .input("DeviceDetails", sql.VarChar, deviceDetails)
+            .input("IP_Address", sql.VarChar, ipAddress)
+            .input("Location", sql.VarChar, location)
+            .input("LocationType", sql.VarChar, locationType)
+            .query(`EXEC sp_Face_Attendance_log_test '${mode}',@Employee_ID,'','','','','','','',@DeviceDetails,@IP_Address,@Location,@LocationType,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL`);
+
+          return res.json({
+            message:
+              mode === "IN"
+                ? `Check-In Successful (${empID})`
+                : `Check-Out Successful (${empID})`
+          });
 
           await pool.request()
             .input("Employee_ID", sql.VarChar, empID)
@@ -119,7 +149,7 @@ app.post("/searchAttendance", async (req, res) => {
       .input("Employee_ID", sql.VarChar, Employee_ID)
       .input("from_date", sql.VarChar, from_date)
       .input("to_date", sql.VarChar, to_date)
-      .query(`EXEC sp_Face_Attendance_log 'SC',@Employee_ID,'','','','','',@from_date,@to_date,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL`);
+      .query(`EXEC sp_Face_Attendance_log_test 'SC',@Employee_ID,'','','','','',@from_date,@to_date,'','','','',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL`);
     if (result.recordset.length > 0) {
       res.status(200).json(result.recordset); // 200 OK if data is found
     } else {
@@ -169,3 +199,4 @@ app.post("/searchEmployee", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
+  
