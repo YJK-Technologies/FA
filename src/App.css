@@ -66,3 +66,428 @@ body {
   font-size: 14px !important;
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.3);
 }
+
+.react-select__control {
+    min-height: 38px !important;
+    border: 1px solid #ced4da !important;
+    border-radius: 4px !important;
+    box-shadow: none !important;
+    cursor: pointer;
+}
+
+.react-select__control:hover {
+    border-color: #007bff !important;
+}
+
+.react-select__control--is-focused {
+    border-color: #007bff !important;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3) !important;
+}
+
+.react-select__value-container {
+    padding: 2px 8px !important;
+}
+
+.react-select__placeholder {
+    color: #0e406b !important;
+    font-size: 14px;
+}
+
+.react-select__single-value {
+    color: #212529 !important;
+    font-size: 14px;
+}
+
+.react-select__menu {
+    background-color: #ffffff !important;
+    z-index: 9999 !important;
+    border: 1px solid #ccc !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2) !important;
+}
+
+.react-select__menu-list {
+    background-color: #ffffff !important;
+}
+
+.react-select__option {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    font-size: 14px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.react-select__option--is-focused {
+    background-color: #e9ecef !important;
+    color: #000000 !important;
+}
+
+.react-select__option--is-selected {
+    background-color: #007bff !important;
+    color: #ffffff !important;
+}
+
+.react-select__indicator-separator {
+    display: none;
+}
+
+.react-select__dropdown-indicator {
+    color: #666 !important;
+}
+
+.react-select__clear-indicator {
+    color: #dc3545 !important;
+}
+
+/* popup */
+.search-input-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.search-input-wrapper input {
+  width: 100%;
+  padding-right: 35px; 
+  box-sizing: border-box;
+}
+
+.input-inside-search-btn {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #0e406b; 
+  cursor: pointer;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+}
+
+.input-inside-search-btn:hover {
+  color: #007bff;
+}
+
+/* Modal Overlay  */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6); /* Semi-transparent black */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000; 
+  backdrop-filter: blur(3px); 
+}
+
+/* Modal Box */
+.modal-content-box {
+  background: #ffffff;
+  width: 400px;
+  max-width: 90%;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  animation: fadeIn 0.3s ease-out;
+  overflow: hidden;
+  font-family: "Poppins", sans-serif;
+}
+
+@keyframes fadeIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* Modal Header */
+.modal-header {
+  background-color: #0e406b;
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.close-modal-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+/* Modal Form Fields */
+.modal-form {
+  padding: 20px;
+}
+
+.modal-input-group {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-input-group label {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.modal-input-group input {
+  padding: 8px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: "Poppins", sans-serif;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.modal-input-group input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+}
+
+/* Modal Actions Buttons */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.modal-submit-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.modal-submit-btn:hover {
+  background-color: #0056b3;
+}
+
+.modal-cancel-btn {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.modal-cancel-btn:hover {
+  background-color: #5a6268;
+}
+
+.modal-content-box {
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  animation: fadeIn 0.3s ease-out;
+  overflow: hidden;
+  font-family: "Poppins", sans-serif;
+}
+
+.input-inside-search-btn {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: #0e406b;
+  cursor: pointer;
+  padding: 8px; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10; 
+}
+
+/* ==========================================================================
+   Popup / Modal Styles (Updated Fixes)
+   ========================================================================== */
+
+.search-input-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.search-input-wrapper input {
+  width: 100%;
+  padding-right: 35px; 
+  box-sizing: border-box;
+}
+
+.input-inside-search-btn {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent; 
+  border: none;
+  color: #0e406b;
+  cursor: pointer;
+  padding: 8px; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10; 
+}
+
+.input-inside-search-btn:hover {
+  color: #007bff;
+}
+
+.modal-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: rgba(0, 0, 0, 0.6) !important; 
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  z-index: 999999 !important; 
+  backdrop-filter: blur(3px); 
+}
+
+.modal-content-box {
+  background: #ffffff !important;
+  width: 600px !important;
+  max-width: 95% !important;
+  border-radius: 8px !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4) !important;
+  animation: fadeIn 0.3s ease-out;
+  overflow: hidden;
+  font-family: "Poppins", sans-serif;
+  z-index: 1000000 !important;
+}
+
+@keyframes fadeIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* Modal Header */
+.modal-header {
+  background-color: #0e406b;
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.close-modal-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+/* Modal Form Fields */
+.modal-form {
+  padding: 20px;
+}
+
+.modal-input-group {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-input-group label {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.modal-input-group input {
+  padding: 8px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: "Poppins", sans-serif;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.modal-input-group input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+}
+
+/* Modal Actions Buttons */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.modal-submit-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.modal-submit-btn:hover {
+  background-color: #0056b3;
+}
+
+.modal-cancel-btn {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.modal-cancel-btn:hover {
+  background-color: #5a6268;
+}

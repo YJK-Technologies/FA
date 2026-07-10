@@ -161,6 +161,41 @@ app.post("/searchAttendance", async (req, res) => {
   }
 });
 
+app.get("/EmployeeIdDrop", async (req, res) => {
+  try {
+    const pool = await sql.connect(dbConfig);
+    const result = await pool.request().query(` EXEC sp_registered_faces 'F', '', '', '', '', '', '', '', '', '', NULL, NULL, NULL, NULL `);
+
+    if (result.recordset.length > 0) {
+      res.status(200).json(result.recordset);
+    } else {
+      res.status(404).json({ message: "Data not found" });
+    }
+  } catch (err) {
+    console.error("Error:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post("/searchEmployee", async (req, res) => {
+  try {
+    const { Employee_ID, name } = req.body;
+    const pool = await sql.connect(dbConfig);
+    const result = await pool.request()
+      .input("Employee_ID", sql.VarChar, Employee_ID)
+      .input("name", sql.VarChar, name)
+      .query(`EXEC sp_registered_faces 'SC',@Employee_ID,@name,'','','',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL`);
+    if (result.recordset.length > 0) {
+      res.status(200).json(result.recordset); // 200 OK if data is found
+    } else {
+      res.status(404).json("Data not found"); // 404 Not Found if no data is found
+    }
+  } catch (err) {
+    console.error("Search Error:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
