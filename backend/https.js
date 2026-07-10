@@ -50,7 +50,7 @@ app.post("/register", async (req, res) => {
     for (let i = 0; i < images.length; i++) {
       const img = images[i];
       try {
-        const response = await axios.post("http://localhost:5001/encode", { image: img });
+        const response = await axios.post("http://localhost:5055/encode", { image: img });
         if (response.data.encoding) {
           encodedFaces.push(response.data.encoding);
         } else {
@@ -92,7 +92,7 @@ app.post("/attendance", async (req, res) => {
   try {
     const { image, type } = req.body;
 
-    const response = await axios.post("http://localhost:5001/recognize", { image });
+    const response = await axios.post("http://localhost:5055/recognize", { image });
 
     if (response.data.error || !response.data.encoding) {
       return res.status(400).json({ message: response.data.error || "Face Not Recognized" });
@@ -113,7 +113,7 @@ app.post("/attendance", async (req, res) => {
       }
 
       for (let storedEncoding of storedEncodings) {
-        const matchResponse = await axios.post("http://localhost:5001/match", {
+        const matchResponse = await axios.post("http://localhost:5055/match", {
           storedEncoding,
           inputEncoding: response.data.encoding,
         });
@@ -162,6 +162,47 @@ app.post("/searchAttendance", async (req, res) => {
       res.status(200).json(result.recordset);
     } else {
       res.status(404).json("Data not found");
+    }
+  } catch (err) {
+    console.error("Search Error:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ========================
+// Employee ID Dropdown API
+// ========================
+app.get("/EmployeeIdDrop", async (req, res) => {
+  try {
+    const pool = await sql.connect(dbConfig);
+    const result = await pool.request().query(` EXEC sp_registered_faces 'F', '', '', '', '', '', '', '', '', '', NULL, NULL, NULL, NULL `);
+
+    if (result.recordset.length > 0) {
+      res.status(200).json(result.recordset);
+    } else {
+      res.status(404).json({ message: "Data not found" });
+    }
+  } catch (err) {
+    console.error("Error:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ========================
+// search Employee API
+// ========================
+app.post("/searchEmployee", async (req, res) => {
+  try {
+    const { Employee_ID, name } = req.body;
+    const pool = await sql.connect(dbConfig);
+    const result = await pool.request()
+      .input("Employee_ID", sql.VarChar, Employee_ID)
+      .input("name", sql.VarChar, name)
+      .query(`EXEC sp_registered_faces 'SC',@Employee_ID,@name,'','','',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL`);
+    if (result.recordset.length > 0) {
+      res.status(200).json(result.recordset); // 200 OK if data is found
+    } else {
+      res.status(404).json("Data not found"); // 404 Not Found if no data is found
     }
   } catch (err) {
     console.error("Search Error:", err);
