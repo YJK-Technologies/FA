@@ -281,11 +281,57 @@ const Attendance = () => {
     };
   }, []);
 
+  // const captureAndMarkAttendance = async () => {
+  //   const locationData = await getCurrentLocationData();
+
+  //   const currentLocation = `${locationData.latitude},${locationData.longitude}`;
+
+  //   const currentLocationType = locationData.locationType;
+
+  //   if (!currentLocation) {
+  //     toast.error("Please enable location to mark attendance");
+  //     return;
+  //   }
+
+  //   setLoading(true);
+
+  //   try {
+  //     const imageSrc = webcamRef.current.getScreenshot();
+  //     if (!imageSrc) {
+  //       toast.error("Unable to capture image. Try again.");
+  //       setLoading(false);
+  //       return;
+  //     }
+
+  //     const response = await fetch(`${config.apiBaseUrl}/attendance`, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({
+  //         image: imageSrc,
+  //         deviceDetails,
+  //         ipAddress,
+  //         location: currentLocation,
+  //         locationType: currentLocationType
+  //       }),
+  //     });
+
+  //     const data = await response.json();
+  //     if (response.ok) {
+  //       toast.success(data.message);
+  //     } else {
+  //       toast.error(data.message);
+  //     }
+  //   } catch (err) {
+  //     console.error("Error:", err);
+  //     toast.error("Something went wrong.");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const captureAndMarkAttendance = async () => {
     const locationData = await getCurrentLocationData();
-
     const currentLocation = `${locationData.latitude},${locationData.longitude}`;
-
     const currentLocationType = locationData.locationType;
 
     if (!currentLocation) {
@@ -309,24 +355,30 @@ const Attendance = () => {
         body: JSON.stringify({
           image: imageSrc,
           deviceDetails,
-
           ipAddress,
-
           location: currentLocation,
-
           locationType: currentLocationType
         }),
       });
 
-      const data = await response.json();
+      // Safely parse JSON or default to raw text if it's an error page
+      let data = {};
+      const responseText = await response.text();
+      try {
+        data = JSON.parse(responseText);
+      } catch (parseErr) {
+        data = { message: responseText || "Unexpected Server Error" };
+      }
+
       if (response.ok) {
-        toast.success(data.message);
+        toast.success(data.message || "Success");
       } else {
-        toast.error(data.message);
+        // This will display the exact error sent from our detailed Node catch block!
+        toast.error(data.message || "Attendance processing failed.");
       }
     } catch (err) {
-      console.error("Error:", err);
-      toast.error("Something went wrong.");
+      console.error("Network/App Error:", err);
+      toast.error(err.message || "Something went wrong.");
     } finally {
       setLoading(false);
     }
