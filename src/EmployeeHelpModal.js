@@ -43,7 +43,7 @@ const EmployeeHelpModal = ({ isOpen, onClose, onSelectEmployee }) => {
       if (response.ok) {
         const data = await response.json();
         setModalRowData(data); 
-        toast.success("Data fetched successfully");
+        // toast.success("Data fetched successfully");
       } else if (response.status === 404) {
         setModalRowData([]);
         toast.error("Data not found"); 
